@@ -5,51 +5,53 @@ const {Page}=require("../models");
 const {User}=require("../models");
 const index = require("../views/index");
 
-// db.authenticate().
-// then(() => {
-//   console.log('connected to the database');
-// })
-// const init = async() => {
-//     await models.db.sync({force: true})
 
-// }
-// //models.db.sync({force: true})
-// init();
+
 router.get('/add', (req, res, next) => {
     res.send(index.addPage())
+})
+
+router.get('/users', async (req, res, next) => {
+    try {
+        const users = await User.findAll();
+        res.send(index.userList(users))
+    } catch (error) {
+        next(error)
+    }
+
 })
 
 router.get('/:slug', async(req, res, next) => {
     let slug=req.params.slug;
     try{
-    const id= await Page.findOne({
-        attributes:['authorId'],
-        where:{slug:slug}
+        const foundId = await Page.findOne({
+            attributes: ['authorId'],
+            where: {slug : slug}
+
+        })
+        const foundName = await User.findByPk(foundId.authorId)
+        const foundSlug=await Page.findOne({
+            where: { slug : slug}
     });
-    console.log(id.authorId)
-    const foundSlug=await Page.findOne({
-        where: { slug : slug}
-    });
-    res.send(index.wikiPage(foundSlug))
-}catch(err){next(err)}
-
-  });
-
-router.get('/users', (req, res, next) => {
-
-    res.send(index.userList())
-})
-
-router.get('/', async(req, res, next) => {
-    // console.log(user)
-    try{
-        const allPages=await Page.findAll();
-        const allUsers=await User.findAll();
-        console.log(allUsers)
-        res.send(index.userPages(allUsers,allPages));
+        res.send(index.wikiPage(foundSlug, foundName))
     }catch(err){next(err)}
 
+    });
+
+
+
+router.get('/', async(req, res, next) => {
+    try {
+        const pages = await Page.findAll();
+        res.send(index.main(pages))
+    } catch (error) {
+        next(error)
+    }
+
 })
+
+
+
 function getSlug(title){
     let r=/[^A-Za-z]/g;
     return title.replace(r,'_');
@@ -77,4 +79,3 @@ router.post('/', async(req, res, next) => {
     //console.log(user);
 })
 module.exports = router;
-

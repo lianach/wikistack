@@ -1,8 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
-const router = require('./routes/index')
-
-
+const pagesRoute = require('./routes/pages')
+ const usersRoute = require('./routes/users')
 const app = express();
 
 app.use(morgan('dev'));
@@ -10,8 +9,8 @@ app.use(express.static(__dirname));
 app.use(express.urlencoded({extended: false}));
 const { db } = require('./models');
 const models = require('./models')
-app.use('/wiki', router)
-
+app.use('/wiki', pagesRoute);
+app.use('/', usersRoute);
 const PORT = 3000;
 
 app.get("/",(req,res,next)=>{
