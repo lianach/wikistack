@@ -9,7 +9,6 @@ const Page = db.define('page', {
     type: Sequelize.STRING,
     allowNull: false,
     validate: {
-      isAlpha: true,
       len: [3, 30]
     }
   },
@@ -36,10 +35,11 @@ const User = db.define('user', {
     type: Sequelize.STRING,
     allowNull: false,
     validate: {
-      isEmail: true,
-      isLowerCase: true
+      isEmail: true
     }
   }
 });
+Page.belongsTo(User,{as:'author'});
+
 
 module.exports = { Page, User, db };
