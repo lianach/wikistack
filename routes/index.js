@@ -22,6 +22,11 @@ router.get('/add', (req, res, next) => {
 router.get('/:slug', async(req, res, next) => {
     let slug=req.params.slug;
     try{
+    const id= await Page.findOne({
+        attributes:['authorId'],
+        where:{slug:slug}
+    });
+    console.log(id.authorId)
     const foundSlug=await Page.findOne({
         where: { slug : slug}
     });
@@ -40,6 +45,7 @@ router.get('/', async(req, res, next) => {
     try{
         const allPages=await Page.findAll();
         const allUsers=await User.findAll();
+        console.log(allUsers)
         res.send(index.userPages(allUsers,allPages));
     }catch(err){next(err)}
 
