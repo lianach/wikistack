@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/jthnyc/wikistack#readme",
   "dependencies": {
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "html-template-tag": "^3.2.0",
     "morgan": "^1.9.1",
     "node-time-ago": "^1.0.0",
